@@ -39,9 +39,9 @@
                     ResultSet rs;
 
                     String driverName = "com.mysql.jdbc.Driver";
-                    String url = "jdbc:mysql://localhost:3306/cmpe283";
-                    String user = "root";
-                    String dbpsw = "";
+                    String url = "jdbc:mysql://cmpe283.cevc26sazqga.us-west-1.rds.amazonaws.com/cmpe283";
+                    String user = "clouduser";
+                    String dbpsw = "clouduser";
 
                     String usrName = session.getAttribute("userName").toString();
                     String sql = "select * from vm_users where userName=?";

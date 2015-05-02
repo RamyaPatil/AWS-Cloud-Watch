@@ -26,7 +26,7 @@
                     <h4>Cloud Statistics</h4>
                 </div>
                 <div class="panel-body">
-                    <iframe src="http://54.183.233.221:5601/" width="1150px" height="1000px">
+                    <iframe src="http://54.183.233.221:5601/#/visualize/edit/New-Visualization?embed&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:'*')),vis:(aggs:!((id:'1',params:(field:cpu),schema:metric,type:avg),(id:'2',params:(extended_bounds:(),field:'@timestamp',interval:second,min_doc_count:1),schema:segment,type:date_histogram),(id:'3',params:(filters:!((input:(query:(query_string:(analyze_wildcard:!t,query:'vmname:T08-VM03-Lin')))))),schema:group,type:filters)),listeners:(),params:(addLegend:!t,addTooltip:!t,defaultYExtents:!f,shareYAxis:!t,spyPerPage:10),type:line))&_g=(time:(from:now-15m,to:now))" width="450px" height="450px">
                         <p>Your browser does not support iframes.</p>
                     </iframe>
                 </div>
