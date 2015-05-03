@@ -1,11 +1,4 @@
-<%@ page import="com.mysql.jdbc.StringUtils" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: Varun
-  Date: 4/10/2015
-  Time: 1:26 PM
-  To change this template use File | Settings | File Templates.
---%>
+*<%@ page import="com.mysql.jdbc.StringUtils" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html lang="en">
 <head>
