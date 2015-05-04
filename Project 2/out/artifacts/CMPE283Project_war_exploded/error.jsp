@@ -28,7 +28,10 @@
                 <div class="panel-body">
                     <form class="form-horizontal" role="form">
                         <div class="form-group">
-                            <label style='margin-left: 100px'>Oops!!! There is an error. Error Details: <%=request.getParameter("error")%></label>
+                            <label style='margin-left: 100px'>Oops!!! There is an error.</label>
+                            </br>
+                            </br>
+                            <label style='margin-left: 100px'>Error Details: <%=request.getParameter("error")%></label>
                         </div>
                     </form>
                 </div>

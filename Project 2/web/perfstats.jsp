@@ -58,6 +58,7 @@
                             if(usrName.equals(userName))
                             {
                                 memUsage = PStatistics.getMemoryUsage(vmName);
+                                //String memoryUsage = PStatistics.getMaxMemoryUsage(vmName);
                                 int i = Integer.parseInt(memUsage.split(":")[0]);
                                 String ip = memUsage.split(":")[1];
                                 if(!(rs.isLast())) {
@@ -77,7 +78,7 @@
                     }
                     catch(Exception sqe)
                     {
-                        out.println(sqe);
+                        response.sendRedirect("error.jsp?error=" + sqe.getMessage());
                     }
                 %>
 
@@ -114,7 +115,7 @@
                             ps.close();
                         }
                         catch(Exception sqe) {
-                            out.println(sqe);
+                            response.sendRedirect("error.jsp?error=" + sqe.getMessage());
                          }
                     %>
                     ]);

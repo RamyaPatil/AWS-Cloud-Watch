@@ -9,7 +9,7 @@ import com.vmware.vim25.mo.*;
 import java.rmi.RemoteException;
 
 public class VMTemplate {
-    public static String ubuTemplate = "T08-TPLATE-Ubu";
+    public static String ubuTemplate = "T08-TPLATE01-Ubu";
     public static String winTemplate = "T08-TPLATE-Win";
 
     public static boolean createVMFromTemplate(Folder vmFolder, ResourcePool rp, HostSystem hs, String vmName) throws RemoteException {

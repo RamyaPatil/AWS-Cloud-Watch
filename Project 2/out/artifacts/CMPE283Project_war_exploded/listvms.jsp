@@ -1,6 +1,5 @@
 <%@ page import="java.sql.*" %>
 <%@ page import="cmpe283Project.CloudManager" %>
-<%@ page import="cmpe283Project.PStatistics" %>
 <%--
   Created by IntelliJ IDEA.
   User: Varun
@@ -58,9 +57,9 @@
                                     String tempStatus = "";
 
                                     String driverName = "com.mysql.jdbc.Driver";
-                                    String url = "jdbc:mysql://localhost:3306/cmpe283";
-                                    String user = "root";
-                                    String dbpsw = "";
+                                    String url = "jdbc:mysql://cmpe283.cevc26sazqga.us-west-1.rds.amazonaws.com/cmpe283";
+                                    String user = "clouduser";
+                                    String dbpsw = "clouduser";
 
                                     String usrName = request.getParameter("userName");
                                     String powerStats = "";
@@ -106,7 +105,7 @@
                                     }
                                     catch(Exception sqe)
                                     {
-                                        out.println(sqe);
+                                        response.sendRedirect("error.jsp?error=" + sqe.getMessage());
                                     }
                                 %>
                             </table>

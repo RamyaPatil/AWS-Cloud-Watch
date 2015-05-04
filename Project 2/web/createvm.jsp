@@ -44,14 +44,18 @@
                                 String ramsize = request.getParameter("ramSize");
                                 String ostype = request.getParameter("ostype");
                                 String userName = session.getAttribute("userName").toString();
+                                String email = "";
                                 boolean isCreated = false;
                                 Connection con;
                                 PreparedStatement ps;
+                                ResultSet rs = null;
                                 String driverName = "com.mysql.jdbc.Driver";
                                 String url = "jdbc:mysql://cmpe283.cevc26sazqga.us-west-1.rds.amazonaws.com/cmpe283";
                                 String user = "clouduser";
                                 String dbpsw = "clouduser";
                                 String sql = "insert into vm_users values(?,?)";
+                                String sql1 = "insert into alarms values(?,?,?,?,?,?,?,?,?,?)";
+                                String sql2 = "select * from users where userName=?";
                                 if(StringUtils.isNullOrEmpty(vmName2) && disksize.equalsIgnoreCase("noSel") &&
                                         ramsize.equalsIgnoreCase("noSel") && ostype.equalsIgnoreCase("noSel")) {
                                     if(!(StringUtils.isNullOrEmpty(vmName1)) && !(selectos.equalsIgnoreCase("noSel"))) {
@@ -61,7 +65,12 @@
                                         else {
                                             vmName1 = vmName1 + "-Ubu";
                                         }
-                                        isCreated = CloudManager.myVMCreation(vmName1);
+                                        try {
+                                            isCreated = CloudManager.myVMCreation(vmName1);
+                                        }
+                                        catch(Exception sqe) {
+                                            response.sendRedirect("error.jsp?error=" + sqe.getMessage());
+                                        }
                                     }
                                     else {
                                         response.sendRedirect("error.jsp?error=Give all details before clicking on Create VM");
@@ -72,7 +81,12 @@
                                             !(ramsize.equalsIgnoreCase("noSel")) && !(ostype.equalsIgnoreCase("noSel"))) {
                                         long tempDisk = Long.parseLong(disksize);
                                         long ramDisk = Long.parseLong(ramsize);
-                                        isCreated = CloudManager.myScratchVMCreation(vmName2,tempDisk,ramDisk);
+                                        try {
+                                            isCreated = CloudManager.myScratchVMCreation(vmName2,tempDisk,ramDisk);
+                                        }
+                                        catch(Exception sqe) {
+                                            response.sendRedirect("error.jsp?error=" + sqe.getMessage());
+                                        }
                                     }
                                     else {
                                        response.sendRedirect("error.jsp?error=Give all details before clicking on Create VM");
@@ -88,6 +102,37 @@
                                     try {
                                         Class.forName(driverName);
                                         con = DriverManager.getConnection(url, user, dbpsw);
+                                        //Getting emailid from users table
+                                        ps = con.prepareStatement(sql2);
+                                        ps.setString(1, userName);
+                                        rs = ps.executeQuery();
+                                        while(rs.next()) {
+                                            email = rs.getString("email");
+                                        }
+                                        rs.close();
+                                        ps.close();
+
+                                        //Inserting to alarms table
+                                        ps = con.prepareStatement(sql1);
+                                        if(StringUtils.isNullOrEmpty(vmName1)) {
+                                            ps.setString(1, vmName2);
+                                        }
+                                        else {
+                                            ps.setString(1, vmName1);
+                                        }
+                                        ps.setString(2, userName);
+                                        ps.setString(3, email);
+                                        ps.setInt(4, -1);
+                                        ps.setInt(5, -1);
+                                        ps.setInt(6, -1);
+                                        ps.setInt(7, -1);
+                                        ps.setInt(8, -1);
+                                        ps.setInt(9, 1);
+                                        ps.setString(10, "false");
+                                        ps.executeUpdate();
+                                        ps.close();
+
+                                        //Inserting to vm_users table
                                         ps = con.prepareStatement(sql);
                                         ps.setString(1, userName);
                                         if(isCreated) {
@@ -103,7 +148,7 @@
                                     }
                                     catch(Exception sqe)
                                     {
-                                        out.println(sqe);
+                                        response.sendRedirect("error.jsp?error=" + sqe.getMessage());
                                     }
                                 }
                             %>

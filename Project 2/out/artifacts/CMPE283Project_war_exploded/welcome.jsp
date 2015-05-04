@@ -64,9 +64,9 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-lg-2 control-label" style="width:200px">Create an Alarm</label>
+                            <label class="col-lg-2 control-label" style="width:200px">Alarm Management</label>
                             <div class="col-md-4">
-                                <a href="createalarm.jsp" class="btn btn-primary" style="width: 200px">Create Alarm</a>
+                                <a href="createalarm.jsp" class="btn btn-primary" style="width: 200px">Alarm Management</a>
                             </div>
                         </div>
                     </form>

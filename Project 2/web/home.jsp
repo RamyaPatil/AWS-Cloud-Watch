@@ -70,7 +70,7 @@
             }
             catch(Exception sqe)
             {
-                out.println(sqe);
+                response.sendRedirect("error.jsp?error=" + sqe.getMessage());
             }
         }
         else
@@ -120,7 +120,7 @@
                     }
                     catch(Exception sqe)
                     {
-                        out.println(sqe);
+                        response.sendRedirect("error.jsp?error=" + sqe.getMessage());
                     }
                 }
                 else {

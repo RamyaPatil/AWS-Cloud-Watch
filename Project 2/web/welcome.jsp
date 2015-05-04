@@ -1,4 +1,11 @@
 <%@ page import="cmpe283Project.CloudManager" %>
+<%--
+  Created by IntelliJ IDEA.
+  User: Varun
+  Date: 4/10/2015
+  Time: 5:30 PM
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -12,10 +19,6 @@
     <script type="text/javascript">
         function sendSession() {
             window.location.href = "listvms.jsp?userName=<%=session.getAttribute("userName")%>";
-            
-        }
-        function sendCloudWatchSession(){
-        	window.location.href = "cloudwatch.jsp?userName=<%=session.getAttribute("userName")%>";
         }
     </script>
 </head>
@@ -57,14 +60,13 @@
                         <div class="form-group">
                             <label class="col-lg-2 control-label" style="width:200px">Private Cloud Statistics</label>
                             <div class="col-md-4">
-                                <!-- <a href="cloudwatch.jsp" class="btn btn-primary" onclick="sendCloudWatchSession()" style="width: 200px">Cloud Watch</a> -->
-                                <a class="btn btn-primary" onclick="sendCloudWatchSession()" style="width: 200px">Cloud Watch</a>
+                                <a href="cloudwatch.jsp" class="btn btn-primary" style="width: 200px">Cloud Watch</a>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-lg-2 control-label" style="width:200px">Create an Alarm</label>
+                            <label class="col-lg-2 control-label" style="width:200px">Alarm Management</label>
                             <div class="col-md-4">
-                                <a href="createalarm.jsp" class="btn btn-primary" style="width: 200px">Create Alarm</a>
+                                <a href="createalarm.jsp" class="btn btn-primary" style="width: 200px">Alarm Management</a>
                             </div>
                         </div>
                     </form>

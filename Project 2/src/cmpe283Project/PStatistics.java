@@ -3,6 +3,7 @@ package cmpe283Project;
 /**
  * Created by Varun on 4/11/2015.
  */
+
 import com.mysql.jdbc.StringUtils;
 import com.vmware.vim25.mo.*;
 
@@ -24,10 +25,10 @@ public class PStatistics {
                         for (int p = 0; p < vms.length; p++) {
                             VirtualMachine vm = vms[p];
                             if (vm != null && vm.getName().equalsIgnoreCase(vmName)) {
-                                if( vm.getRuntime().getMaxCpuUsage() == null)
+                                if( vm.getSummary().quickStats.getOverallCpuUsage() == null)
                                     return "0";
                                 else
-                                    return vm.getRuntime().getMaxCpuUsage().toString();
+                                    return vm.getSummary().quickStats.getOverallCpuUsage().toString();
                             }
                         }
                     }
@@ -127,6 +128,67 @@ public class PStatistics {
         }
         catch(Exception e)  {
             System.out.println("Error in powering on VM: "+ e.getMessage());
+        }
+        return "0";
+    }
+
+    public static String getMaxCPUUsage(String vmName) {
+        try {
+            URL url = new URL("https://130.65.132.108/sdk");
+            ServiceInstance si = new ServiceInstance(url, "administrator",
+                    "12!@qwQW", true);
+            ManagedEntity[] hosts = new InventoryNavigator(si.getRootFolder()).searchManagedEntities("HostSystem");
+            for(int i=0; i<hosts.length; i++) {
+                HostSystem h = (HostSystem) hosts[i];
+                if (h != null) {
+                    if (h.getName() != null) {
+                        VirtualMachine vms[] = h.getVms();
+                        for (int p = 0; p < vms.length; p++) {
+                            VirtualMachine vm = vms[p];
+                            if (vm != null && vm.getName().equalsIgnoreCase(vmName)) {
+                                if( vm.getRuntime().getMaxCpuUsage() == null)
+                                    return "0";
+                                else
+                                    return vm.getRuntime().getMaxCpuUsage().toString();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch(Exception e) {
+            System.out.println("Error in getting max CPU usage: "+ e.getMessage());
+        }
+        return "0";
+    }
+
+    public static String getMaxMemoryUsage(String vmName) {
+        try {
+            URL url = new URL("https://130.65.132.108/sdk");
+            ServiceInstance si = new ServiceInstance(url, "administrator",
+                    "12!@qwQW", true);
+            ManagedEntity[] hosts = new InventoryNavigator(si.getRootFolder()).searchManagedEntities("HostSystem");
+            for(int i=0; i<hosts.length; i++) {
+                HostSystem h = (HostSystem) hosts[i];
+                if (h != null) {
+                    if (h.getName() != null) {
+                        VirtualMachine vms[] = h.getVms();
+                        for (int p = 0; p < vms.length; p++) {
+                            VirtualMachine vm = vms[p];
+                            if (vm != null && vm.getName().equalsIgnoreCase(vmName)) {
+                                //temp(si,vm);
+                                if( vm.getSummary().getConfig() == null)
+                                    return "0";
+                                else
+                                    return vm.getSummary().getConfig().memorySizeMB.toString();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch(Exception e)  {
+            System.out.println("Error in getting max memory usage: "+ e.getMessage());
         }
         return "0";
     }

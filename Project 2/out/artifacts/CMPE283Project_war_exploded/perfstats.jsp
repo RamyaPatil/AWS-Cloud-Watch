@@ -39,9 +39,9 @@
                     ResultSet rs;
 
                     String driverName = "com.mysql.jdbc.Driver";
-                    String url = "jdbc:mysql://localhost:3306/cmpe283";
-                    String user = "root";
-                    String dbpsw = "";
+                    String url = "jdbc:mysql://cmpe283.cevc26sazqga.us-west-1.rds.amazonaws.com/cmpe283";
+                    String user = "clouduser";
+                    String dbpsw = "clouduser";
 
                     String usrName = session.getAttribute("userName").toString();
                     String sql = "select * from vm_users where userName=?";
@@ -58,6 +58,7 @@
                             if(usrName.equals(userName))
                             {
                                 memUsage = PStatistics.getMemoryUsage(vmName);
+                                //String memoryUsage = PStatistics.getMaxMemoryUsage(vmName);
                                 int i = Integer.parseInt(memUsage.split(":")[0]);
                                 String ip = memUsage.split(":")[1];
                                 if(!(rs.isLast())) {
@@ -77,7 +78,7 @@
                     }
                     catch(Exception sqe)
                     {
-                        out.println(sqe);
+                        response.sendRedirect("error.jsp?error=" + sqe.getMessage());
                     }
                 %>
 
@@ -114,7 +115,7 @@
                             ps.close();
                         }
                         catch(Exception sqe) {
-                            out.println(sqe);
+                            response.sendRedirect("error.jsp?error=" + sqe.getMessage());
                          }
                     %>
                     ]);

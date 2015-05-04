@@ -1,5 +1,3 @@
-<%@ page import="java.sql.*" %>
-<%@ page import="cmpe283Project.CloudManager" %>
 <%@ page import="cmpe283Project.PStatistics" %>
 <%--
   Created by IntelliJ IDEA.
