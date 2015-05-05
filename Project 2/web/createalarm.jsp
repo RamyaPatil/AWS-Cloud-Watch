@@ -24,9 +24,15 @@
     <script type="text/javascript">
         var cpuFlag=true,memFlag=true,ntwFlag=true,diskWriteFlag=true,diskReadFlag=true;
         function cpuSetVisibility(){
+            var cpuThesholdValue = document.getElementById('cpuThreshold').value;
+            var cpuThresholdSpan = document.getElementById('cpuThresholdVal');
+            cpuThresholdSpan.innerHTML = cpuThesholdValue;
+            var showCPUUsageSpan = document.getElementById('showCPUUsage');
+            showCPUUsageSpan.innerHTML = cpuThesholdValue;
             if(document.getElementById('attr1').checked){
-                document.getElementById('cpuThreshold').style.visibility="visible";
+                document.getElementById('thresholdCPU').style.visibility="visible";
                 document.getElementById('cpuThresholdVal').style.visibility="visible";
+                document.getElementById("showCPU").style.display = "block";
                 if(document.getElementById('cpuThreshold').value == 0){
                     cpuFlag=false;
                 } else{
@@ -35,18 +41,25 @@
                 validateForm();
             }
             else {
-                document.getElementById('cpuThreshold').style.visibility="hidden";
+                document.getElementById('thresholdCPU').style.visibility="hidden";
                 document.getElementById('cpuThresholdVal').style.visibility="hidden";
-                document.getElementById('cpuThreshold').value = 0;
-                document.getElementById('cpuThresholdVal').innerHTML = 0;
+                document.getElementById("showCPU").style.display = "none";
+                //document.getElementById('cpuThreshold').value = 0;
+                //document.getElementById('cpuThresholdVal').innerHTML = 0;
                 cpuFlag=true;
                 validateForm();
             }
         }
         function memSetVisibility(){
+            var memThesholdValue = document.getElementById('memThreshold').value;
+            var memThresholdSpan = document.getElementById('memThresholdVal');
+            memThresholdSpan.innerHTML = memThesholdValue;
+            var showMemUsageSpan = document.getElementById('showMemUsage');
+            showMemUsageSpan.innerHTML = memThesholdValue;
             if(document.getElementById('attr2').checked){
-                document.getElementById('memThreshold').style.visibility="visible";
+                document.getElementById('thresholdMem').style.visibility="visible";
                 document.getElementById('memThresholdVal').style.visibility="visible";
+                document.getElementById("showMem").style.display = "block";
                 if(document.getElementById('memThreshold').value == 0){
                     memFlag=false;
                 } else{
@@ -55,49 +68,65 @@
                 validateForm();
             }
             else {
-                document.getElementById('memThreshold').style.visibility="hidden";
+                document.getElementById('thresholdMem').style.visibility="hidden";
                 document.getElementById('memThresholdVal').style.visibility="hidden";
-                document.getElementById('memThreshold').value = 0;
-                document.getElementById('memThresholdVal').innerHTML = 0;
+                document.getElementById("showMem").style.display = "none";
+                //document.getElementById('memThreshold').value = 0;
+                //document.getElementById('memThresholdVal').innerHTML = 0;
                 memFlag=true;
                 validateForm();
             }
         }
         function ntwSetVisibility(){
+            var ntwThesholdValue = document.getElementById('ntwThreshold').value;
+            var showNetUsageSpan = document.getElementById('showNetUsage');
+            showNetUsageSpan.innerHTML = ntwThesholdValue;
             if(document.getElementById('attr3').checked){
-                document.getElementById("ntwThreshold").style.visibility="visible";
+                document.getElementById("thresholdNet").style.visibility="visible";
+                document.getElementById("showNet").style.display = "block";
                 ntwFlag=false;
                 validateForm();
             }
             else {
-                document.getElementById("ntwThreshold").style.visibility="hidden";
-                document.getElementById('ntwThreshold').value = 0;
+                document.getElementById("thresholdNet").style.visibility="hidden";
+                //document.getElementById('ntwThreshold').value = 0;
+                document.getElementById("showNet").style.display = "none";
                 ntwFlag=true;
                 validateForm();
             }
         }
         function diskReadSetVisibility(){
+            var diskReadThesholdValue = document.getElementById('diskReadThreshold').value;
+            var showDiskReadSpan = document.getElementById('showDiskRead');
+            showDiskReadSpan.innerHTML = diskReadThesholdValue;
             if(document.getElementById('attr4').checked){
-                document.getElementById("diskReadThreshold").style.visibility="visible";
+                document.getElementById("thresholdDiskR").style.visibility="visible";
+                document.getElementById("showDiskR").style.display = "block";
                 diskReadFlag=false;
                 validateForm();
             }
             else {
-                document.getElementById("diskReadThreshold").style.visibility="hidden";
-                document.getElementById('diskReadThreshold').value = 0;
+                document.getElementById("thresholdDiskR").style.visibility="hidden";
+                //document.getElementById('diskReadThreshold').value = 0;
+                document.getElementById("showDiskR").style.display = "none";
                 diskReadFlag=true;
                 validateForm();
             }
         }
         function diskWriteSetVisibility(){
+            var diskWriteThesholdValue = document.getElementById('diskWriteThreshold').value;
+            var showDiskWriteSpan = document.getElementById('showDiskWrite');
+            showDiskWriteSpan.innerHTML = diskWriteThesholdValue;
             if(document.getElementById('attr5').checked){
-                document.getElementById("diskWriteThreshold").style.visibility="visible";
+                document.getElementById("thresholdDiskW").style.visibility="visible";
+                document.getElementById("showDiskW").style.display = "block";
                 diskWriteFlag=false;
                 validateForm();
             }
             else {
-                document.getElementById("diskWriteThreshold").style.visibility="hidden";
-                document.getElementById('diskWriteThreshold').value = 0;
+                document.getElementById("thresholdDiskW").style.visibility="hidden";
+                //document.getElementById('diskWriteThreshold').value = 0;
+                document.getElementById("showDiskW").style.display = "none";
                 diskWriteFlag=true;
                 validateForm();
             }
@@ -212,22 +241,52 @@
                     var j = i+1;
                     vmName = document.getElementById('vmName'+ j).innerHTML;
                     document.getElementById("vmNameId").innerHTML = vmName;
+                    alert(document.getElementById('hiddenFieldCPU'+ j).value + "," + document.getElementById('hiddenFieldMem'+ j).value);
+                    document.getElementById("cpuThreshold").max = document.getElementById('hiddenFieldCPU'+ j).value;
+                    document.getElementById("memThreshold").max = document.getElementById('hiddenFieldMem'+ j).value;
                     if(document.getElementById('cpuAlrm'+ j).innerHTML != '-1' && document.getElementById('cpuAlrm'+ j).innerHTML != '-') {
+                        document.getElementById('showCPUUsage').innerHTML = document.getElementById('cpuAlrm'+ j).innerHTML;
                         document.getElementById("cpuThreshold").value = document.getElementById('cpuAlrm'+ j).innerHTML;
                         document.getElementById("cpuThresholdVal").innerHTML = document.getElementById('cpuAlrm'+ j).innerHTML;
                     }
+                    else {
+                        document.getElementById('showCPUUsage').innerHTML = "0";
+                        document.getElementById("cpuThreshold").value = "0";
+                        document.getElementById("cpuThresholdVal").innerHTML = "0";
+                    }
                     if(document.getElementById('memAlrm'+ j).innerHTML != '-1' && document.getElementById('memAlrm'+ j).innerHTML != '-') {
+                        document.getElementById('showMemUsage').innerHTML = document.getElementById('memAlrm'+ j).innerHTML;
                         document.getElementById("memThreshold").value = document.getElementById('memAlrm'+ j).innerHTML;
                         document.getElementById("memThresholdVal").innerHTML = document.getElementById('memAlrm'+ j).innerHTML;
                     }
+                    else {
+                        document.getElementById('showMemUsage').innerHTML = "0";
+                        document.getElementById("memThreshold").value = "0";
+                        document.getElementById("memThresholdVal").innerHTML = "0";
+                    }
                     if(document.getElementById('netAlrm'+ j).innerHTML != '-1' && document.getElementById('netAlrm'+ j).innerHTML != '-') {
+                        document.getElementById('showNetUsage').innerHTML = document.getElementById('netAlrm'+ j).innerHTML;
                         document.getElementById("ntwThreshold").value = document.getElementById('netAlrm'+ j).innerHTML;
                     }
+                    else {
+                        document.getElementById('showNetUsage').innerHTML = "0";
+                        document.getElementById("ntwThreshold").value = "0";
+                    }
                     if(document.getElementById('readAlrm'+ j).innerHTML != '-1' && document.getElementById('readAlrm'+ j).innerHTML != '-') {
+                        document.getElementById('showDiskRead').innerHTML = document.getElementById('readAlrm'+ j).innerHTML;
                         document.getElementById("diskReadThreshold").value = document.getElementById('readAlrm'+ j).innerHTML;
                     }
+                    else {
+                        document.getElementById('showDiskRead').innerHTML = "0";
+                        document.getElementById("diskReadThreshold").value = "0";
+                    }
                     if(document.getElementById('writeAlrm'+ j).innerHTML != '-1' && document.getElementById('writeAlrm'+ j).innerHTML != '-') {
+                        document.getElementById('showDiskWrite').innerHTML = document.getElementById('writeAlrm'+ j).innerHTML;
                         document.getElementById("diskWriteThreshold").value = document.getElementById('writeAlrm'+ j).innerHTML;
+                    }
+                    else {
+                        document.getElementById('showDiskWrite').innerHTML = "0";
+                        document.getElementById("diskWriteThreshold").value = "0";
                     }
                     document.getElementById("period").value = document.getElementById('period'+ j).innerHTML;
                     document.getElementById("periodSpan").innerHTML = document.getElementById('period'+ j).innerHTML;
@@ -291,23 +350,23 @@
                                         <table>
                                             <tr>
                                                 <td><input type="checkbox" id="attr1" name="attr1" value="cpu" onchange="cpuSetVisibility();"></td><td style="font-size:14px;">CPU Usage is > &nbsp;</td><td> : </td>
-                                                <td style="text-align:center;font-size:14px;" width="40px"><span id="cpuThresholdVal">0</span></td><td style="visibility:hidden;" colspan=2><input type="range" id="cpuThreshold" name="cpuThreshold" min="0" max="2400"  value="0" step="1" onchange="changecpuSpan()"> MHz</td>
+                                                <td style="text-align:center;font-size:14px;" width="40px"><span style="visibility: hidden" id="cpuThresholdVal">0</span></td><td colspan=2><span id="thresholdCPU" style="visibility: hidden"><input type="range" id="cpuThreshold" name="cpuThreshold" min="0" value="0" step="1" onchange="changecpuSpan()"> MHz</span></td>
                                             </tr>
                                             <tr>
                                                 <td><input type="checkbox" id="attr2" name="attr2" value="mem" onchange="memSetVisibility()"></td><td style="font-size:14px;">Memory Usage is > &nbsp;</td><td> : </td>
-                                                <td style="text-align:center;font-size:14px;" width="40px"><span id="memThresholdVal">0</span></td><td style="visibility:hidden;" colspan=2 ><input type="range" id="memThreshold" name="memThreshold" min="0" max="1024"  value="0" step="1" onchange="changememSpan()"> MB</td>
+                                                <td style="text-align:center;font-size:14px;" width="40px"><span style="visibility: hidden" id="memThresholdVal">0</span></td><td colspan=2 ><span id="thresholdMem" style="visibility: hidden"><input type="range" id="memThreshold" name="memThreshold" min="0" value="0" step="1" onchange="changememSpan()"> MB</span></td>
                                             </tr>
                                             <tr>
                                                 <td><input type="checkbox" id="attr3" name="attr3" value="ntw" onchange="ntwSetVisibility()"></td><td style="font-size:14px;">Network Usage is > &nbsp;</td><td> : </td>
-                                                <td><input type="text" id="ntwThreshold" name="ntwThreshold" value="0" size="2" style="text-align: center;visibility:hidden;" onchange="ntwValValidate()" style="font-size:14px;"> KbPs</td>
+                                                <td><span style="visibility: hidden" id="thresholdNet"><input type="text" id="ntwThreshold" name="ntwThreshold" value="0" size="2" style="text-align: center;" onchange="ntwValValidate()" style="font-size:14px;"> KbPs</span></td>
                                             </tr>
                                             <tr>
                                                 <td><input type="checkbox" id="attr4" name="attr4" value="diskRead" onchange="diskReadSetVisibility()"></td><td style="font-size:14px;">Disk Read are > &nbsp;</td><td> : </td>
-                                                <td><input type="text" id="diskReadThreshold" name="diskReadThreshold" value="0" size="2" style="text-align: center;visibility:hidden;" onchange="diskReadValidate()" style="font-size:14px;"> KbPs</td>
+                                                <td><span style="visibility: hidden" id="thresholdDiskR"><input type="text" id="diskReadThreshold" name="diskReadThreshold" value="0" size="2" style="text-align: center;" onchange="diskReadValidate()" style="font-size:14px;"> KbPs</span></td>
                                             </tr>
                                             <tr>
                                                 <td><input type="checkbox" id="attr5" name="attr5" value="diskWrite" onchange="diskWriteSetVisibility()"></td><td style="font-size:14px;">Disk Writes are > &nbsp;</td><td> : </td>
-                                                <td><input type="text" id="diskWriteThreshold" name="diskWriteThreshold" value="0" size="2" style="text-align: center;visibility:hidden;" onchange="diskWriteValidate()" style="font-size:14px;"> KbPs</td>
+                                                <td><span style="visibility: hidden" id="thresholdDiskW"><input type="text" id="diskWriteThreshold" name="diskWriteThreshold" value="0" size="2" style="text-align: center;" onchange="diskWriteValidate()" style="font-size:14px;"> KbPs</span></td>
                                             </tr>
                                         </table>
                                         <table>
@@ -320,11 +379,28 @@
                                     <hr>
                                     <p style="font-size:15px;"><i>
                                         This alarm will be triggered when </br>
-                                        <span id="showCPU">CPU Usage > <span id="showCPUUsage"></span> MHz or</span>
-                                        <span id="showMem">Memory Usage > <span id="showMemUsage"></span> MBs or</span>
-                                        <span id="showNet">Network Usage > <span id="showNetUsage"></span> KbPs or</span>
-                                        <span id="showDiskR">Disk Read > <span id="showDiskRead"></span> KbPs or</span>
-                                        <span id="showDiskW">Disk Write > <span id="showDiskWrite"></span> KbPs or</span>
+                                        <table>
+                                            <tr id="showCPU" style="display:none">
+                                                <td>CPU Usage is ></td>
+                                                <td><span id="showCPUUsage">0</span> MHz</td>
+                                            </tr>
+                                            <tr id="showMem" style="display:none">
+                                                <td>Memory Usage is ></td>
+                                                <td><span id="showMemUsage">0</span> MBs</td>
+                                            </tr>
+                                            <tr id="showNet" style="display:none">
+                                                <td>Network Usage is ></td>
+                                                <td><span id="showNetUsage">0</span> KbPs</td>
+                                            </tr>
+                                            <tr id="showDiskR" style="display:none">
+                                                <td>Disk Read is ></td>
+                                                <td><span id="showDiskRead">0</span> KbPs</td>
+                                            </tr>
+                                            <tr id="showDiskW" style="display:none">
+                                                <td>Disk Write is ></td>
+                                                <td><span id="showDiskWrite">0</span> KbPs</td>
+                                            </tr>
+                                        </table>
                                     </i></p>
                                 </div>
                                 <div class="modal-footer">
@@ -396,6 +472,8 @@
                                 while(rs.next()) {
                                         i++;
                                         String virtualMachineName = rs.getString("vmName");
+                                        String cpuMaxUsage = PStatistics.getMaxCPUUsage(virtualMachineName);
+                                        String memMaxUsage = PStatistics.getMaxMemoryUsage(virtualMachineName);
                                         String cpuAlrm;
                                         if(rs.getInt("cpuUsage")== -1) {
                                             cpuAlrm = "-";
@@ -440,7 +518,9 @@
                                             "<td><label style='margin-left: 30px' id='readAlrm" + i + "'>" + readAlrm +"</label></td>" +
                                                 "<td><label style='margin-left: 30px' id='writeAlrm" + i + "'>" + writeAlrm +"</label></td>" +
                                                 "<td><label style='margin-left: 30px' id='netAlrm" + i + "'>" + netAlrm +"</label></td>" +
-                                                "<td><label style='margin-left: 30px' id='period" + i + "'>" + period +"</label></td></tr>");
+                                                "<td><label style='margin-left: 30px' id='period" + i + "'>" + period +"</label></td>"+
+                                                "<td><input type=\"hidden\" id='hiddenFieldCPU"+ i +"' value=\""+ cpuMaxUsage +"\"/></td>" +
+                                                "<td><input type=\"hidden\" id='hiddenFieldMem"+ i +"' value=\""+ memMaxUsage +"\"/></td></tr>");
                                  }
                                  %>
                         </table>

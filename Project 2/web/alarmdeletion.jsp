@@ -28,7 +28,7 @@
 
     String usernm = session.getAttribute("userName").toString();
     String vmname = request.getParameter("vmName");
-    String sql1 = "update alarms set cpuUsage=? , memoryUsage=? , diskRead=? , diskWrite=? , ntwUsage=? , period=? where userName=? and vmName=?";
+    String sql1 = "update alarms set cpuUsage=? , memoryUsage=? , diskRead=? , diskWrite=? , ntwUsage=? , period=?, emailSent='false' where userName=? and vmName=?";
     try {
         Class.forName(driverName);
         con = DriverManager.getConnection(url, user, dbpsw);
