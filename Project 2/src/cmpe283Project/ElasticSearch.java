@@ -1,3 +1,4 @@
+package cmpe283;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -46,7 +47,7 @@ public class ElasticSearch {
 		        .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
 		        .setQuery(QueryBuilders.matchQuery("vmname", vmName))
 		        .setPostFilter(FilterBuilders.rangeFilter("@timestamp").from(getCurrentSystemTimestampOfVM()))
-		        .setFrom(0).setSize(5).setExplain(true)
+		        .setFrom(0).setSize(1).setExplain(true)
 		        .execute()
 		        .actionGet();
 		
