@@ -28,7 +28,7 @@
 
     String usernm = session.getAttribute("userName").toString();
     String vmname = request.getParameter("vmName");
-    String sql1 = "update alarms set cpuUsage=? , memoryUsage=? , diskRead=? , diskWrite=? , ntwUsage=? , period=?, emailSent='false' where userName=? and vmName=?";
+    String sql1 = "update alarms set cpuUsage=? , memoryUsage=? , diskRead=? , diskWrite=? , ntwUsage=? , period=?, diskReadEmailSent=?, diskWriteEmailSent=?, cpuEmailSent=?, memoryEmailSent=?, networkEmailSent=? where (vmName=? and userName=?)";
     try {
         Class.forName(driverName);
         con = DriverManager.getConnection(url, user, dbpsw);
@@ -39,11 +39,19 @@
         ps.setInt(4, -1);
         ps.setInt(5, -1);
         ps.setInt(6, 1);
-        ps.setString(7, usernm);
-        ps.setString(8, vmname);
+        ps.setString(7, "false");
+        ps.setString(8, "false");
+        ps.setString(9, "false");
+        ps.setString(10, "false");
+        ps.setString(11, "false");
+        ps.setString(12, vmname);
+        ps.setString(13, usernm);
         int result = ps.executeUpdate();
         if(result == 1) {
             response.sendRedirect("createalarm.jsp");
+        }
+        else {
+            response.sendRedirect("error.jsp?error=Error during deleting alarm");
         }
         ps.close();
     }

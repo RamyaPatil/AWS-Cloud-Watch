@@ -25,6 +25,7 @@
 <%
     Connection con= null;
     PreparedStatement ps = null;
+    ResultSet rs = null;
     int noOfUpdates;
 
     String driverName = "com.mysql.jdbc.Driver";
@@ -38,31 +39,74 @@
     int diskWrite = -1;
     int netUsage = -1;
     int period = 1;
+    String diskReadSent = "false";
+    String diskWriteSent = "false";
+    String cpuSent = "false";
+    String memorySent = "false";
+    String networkSent = "false";
     String vmname = request.getParameter("vmName");
     String usernm = session.getAttribute("userName").toString();
+    String sql1 = "select * from alarms where vmName=? and userName=?";
+    try {
+        Class.forName(driverName);
+        con = DriverManager.getConnection(url, user, dbpsw);
+        ps = con.prepareStatement(sql1);
+        ps.setString(1, vmname);
+        ps.setString(2, usernm);
+        rs = ps.executeQuery();
+        while(rs.next()) {
+            cpuUsage = rs.getInt("cpuUsage");
+            memUsage = rs.getInt("memoryUsage");
+            diskRead = rs.getInt("diskRead");
+            diskWrite = rs.getInt("diskWrite");
+            netUsage = rs.getInt("ntwUsage");
+            diskReadSent = rs.getString("diskReadEmailSent");
+            diskWriteSent = rs.getString("diskWriteEmailSent");
+            cpuSent = rs.getString("cpuEmailSent");
+            memorySent = rs.getString("memoryEmailSent");
+            networkSent = rs.getString("networkEmailSent");
+        }
+    }
+    catch(Exception sqe) {
+        response.sendRedirect("error.jsp?error=" + sqe.getMessage());
+    }
     if(!(StringUtils.isNullOrEmpty(request.getParameter("cpuUsage"))) && !(request.getParameter("cpuUsage").equalsIgnoreCase("0"))) {
+        if(Integer.parseInt(request.getParameter("cpuUsage")) != cpuUsage) {
+            cpuSent = "false";
+        }
         cpuUsage = Integer.parseInt(request.getParameter("cpuUsage"));
     }
     if(!(StringUtils.isNullOrEmpty(request.getParameter("memUsage"))) && !(request.getParameter("memUsage").equalsIgnoreCase("0"))) {
+        if(Integer.parseInt(request.getParameter("memUsage")) != memUsage) {
+            memorySent = "false";
+        }
         memUsage = Integer.parseInt(request.getParameter("memUsage"));
     }
     if(!(StringUtils.isNullOrEmpty(request.getParameter("diskRead"))) && !(request.getParameter("diskRead").equalsIgnoreCase("0"))) {
+        if(Integer.parseInt(request.getParameter("diskRead")) != diskRead) {
+            diskReadSent = "false";
+        }
         diskRead = Integer.parseInt(request.getParameter("diskRead"));
     }
     if(!(StringUtils.isNullOrEmpty(request.getParameter("diskWrite"))) && !(request.getParameter("diskWrite").equalsIgnoreCase("0"))) {
+        if(Integer.parseInt(request.getParameter("diskWrite")) != diskWrite) {
+            diskWriteSent = "false";
+        }
         diskWrite = Integer.parseInt(request.getParameter("diskWrite"));
     }
     if(!(StringUtils.isNullOrEmpty(request.getParameter("netUsage"))) && !(request.getParameter("netUsage").equalsIgnoreCase("0"))) {
+        if(Integer.parseInt(request.getParameter("netUsage")) != netUsage) {
+            networkSent = "false";
+        }
         netUsage = Integer.parseInt(request.getParameter("netUsage"));
     }
     if(!(StringUtils.isNullOrEmpty(request.getParameter("period"))) && !(request.getParameter("period").equalsIgnoreCase("0"))) {
         period = Integer.parseInt(request.getParameter("period"));
     }
 
-    String sql = "update alarms set cpuUsage=? , memoryUsage=? , diskRead=? , diskWrite=? , ntwUsage=? , period=? where (vmName=? and userName=?)";
+    String sql = "update alarms set cpuUsage=? , memoryUsage=? , diskRead=? , diskWrite=? , ntwUsage=? , period=?, diskReadEmailSent=?, " +
+            "diskWriteEmailSent=?, cpuEmailSent=?, memoryEmailSent=?, networkEmailSent=? where (vmName=? and userName=?)";
     try {
-        Class.forName(driverName);
-        con = DriverManager.getConnection(url, user, dbpsw);
         if(!(StringUtils.isNullOrEmpty(vmname))) {
             ps = con.prepareStatement(sql);
             ps.setInt(1, cpuUsage);
@@ -71,8 +115,13 @@
             ps.setInt(4, diskWrite);
             ps.setInt(5, netUsage);
             ps.setInt(6, period);
-            ps.setString(7, vmname);
-            ps.setString(8, usernm);
+            ps.setString(7, diskReadSent);
+            ps.setString(8, diskWriteSent);
+            ps.setString(9, cpuSent);
+            ps.setString(10, memorySent);
+            ps.setString(11, networkSent);
+            ps.setString(12, vmname);
+            ps.setString(13, usernm);
             noOfUpdates = ps.executeUpdate();
             if(noOfUpdates==1)
             {

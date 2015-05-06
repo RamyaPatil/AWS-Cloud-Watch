@@ -54,7 +54,7 @@
                                 String user = "clouduser";
                                 String dbpsw = "clouduser";
                                 String sql = "insert into vm_users values(?,?)";
-                                String sql1 = "insert into alarms values(?,?,?,?,?,?,?,?,?,?)";
+                                String sql1 = "insert into alarms values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
                                 String sql2 = "select * from users where userName=?";
                                 if(StringUtils.isNullOrEmpty(vmName2) && disksize.equalsIgnoreCase("noSel") &&
                                         ramsize.equalsIgnoreCase("noSel") && ostype.equalsIgnoreCase("noSel")) {
@@ -129,6 +129,10 @@
                                         ps.setInt(8, -1);
                                         ps.setInt(9, 1);
                                         ps.setString(10, "false");
+                                        ps.setString(11, "false");
+                                        ps.setString(12, "false");
+                                        ps.setString(13, "false");
+                                        ps.setString(13, "false");
                                         ps.executeUpdate();
                                         ps.close();
 

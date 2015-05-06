@@ -241,7 +241,7 @@
                     var j = i+1;
                     vmName = document.getElementById('vmName'+ j).innerHTML;
                     document.getElementById("vmNameId").innerHTML = vmName;
-                    alert(document.getElementById('hiddenFieldCPU'+ j).value + "," + document.getElementById('hiddenFieldMem'+ j).value);
+                    //alert(document.getElementById('hiddenFieldCPU'+ j).value + "," + document.getElementById('hiddenFieldMem'+ j).value);
                     document.getElementById("cpuThreshold").max = document.getElementById('hiddenFieldCPU'+ j).value;
                     document.getElementById("memThreshold").max = document.getElementById('hiddenFieldMem'+ j).value;
                     if(document.getElementById('cpuAlrm'+ j).innerHTML != '-1' && document.getElementById('cpuAlrm'+ j).innerHTML != '-') {
