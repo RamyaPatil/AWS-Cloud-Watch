@@ -54,11 +54,12 @@ public class AlternateAlarm extends Thread {
 	        	al.setMemory(rs.getInt("memoryUsage"));
 	        	al.setDisk_read(rs.getInt("diskRead"));
 	        	al.setDisk_write(rs.getInt("diskWrite"));
-	        	al.setDiskReadEmailSent("diskReadEmailSent");
-	        	al.setDiskWriteEmailSent("diskWriteEmailSent");
-	        	al.setNetworkEmailSent("networkEmailSent");
-	        	al.setMemoryEmailSent("memoryEmailSent");
-	        	al.setNetworkEmailSent("networkEmailSent");
+	        	al.setDiskReadEmailSent(rs.getString("diskReadEmailSent"));
+	        	al.setCpuEmailSent(rs.getString("cpuEmailSent"));
+	        	al.setDiskWriteEmailSent(rs.getString("diskWriteEmailSent"));
+	        	al.setNetworkEmailSent(rs.getString("networkEmailSent"));
+	        	al.setMemoryEmailSent(rs.getString("memoryEmailSent"));
+	        	al.setNetworkEmailSent(rs.getString("networkEmailSent"));
 	        	al.setPeriod(rs.getInt("period"));  
 	        	al.setVmName(rs.getString("vmName"));
 	        	vmNameKey = rs.getString("vmName");
@@ -99,7 +100,6 @@ public class AlternateAlarm extends Thread {
             keys = sqlMap.keySet();
             for(String i : keys)
         	{
-            	//AlarmDetails a = (AlarmDetails)sqlMap.get(i);
             	alarmDetailsArray.add((AlarmDetails)sqlMap.get(i));
         	}
             	
@@ -107,76 +107,80 @@ public class AlternateAlarm extends Thread {
 	    	{
 		        System.out.println(sqe);
 		    }
-//	    	for(String i : keys)
-//	    	{
-	    		for ( int k=0; k<alarmDetailsArray.size();k++ )
+
+    		for ( int k=0; k<alarmDetailsArray.size();k++ )
+    		{
+    			Map<String,Map<String,Long>> elasticMap = null;
+	    		elasticMap = ElasticSearch.getElasticData(alarmDetailsArray.get(k).getVmName());
+	    		Iterator iterator = elasticMap.entrySet().iterator();
+	    		Map<String,Long> valueMap = null;
+	    		while(iterator.hasNext())
 	    		{
-	    			Map<String,Map<String,Long>> elasticMap = null;
-		    		elasticMap = ElasticSearch.getElasticData(alarmDetailsArray.get(k).getVmName());
-		    		Iterator iterator = elasticMap.entrySet().iterator();
-		    		Map<String,Long> valueMap = null;
-		    		while(iterator.hasNext())
-		    		{
-		    			Entry thisentry = (Entry) iterator.next();
-		    			valueMap = (Map<String, Long>) thisentry.getValue();
-		    			if((alarmDetailsArray.get(k).getDisk_read() != -1 && alarmDetailsArray.get(k).getDiskReadEmailSent() != "true") &&
-		    					(valueMap.get("diskread") >= alarmDetailsArray.get(k).getDisk_read()))
-		    			{
-		    				String dr = "diskReadEmailSent";
-		    				String subject = "ATTENTION! Disk_Read Threshhold reached for"+alarmDetailsArray.get(k).getVmName();
-							String body = "Please check your VM's.";
-							SendEmail.sendMail(alarmDetailsArray.get(k).getEmailId(),subject,body);
-							updateEmailSent(alarmDetailsArray.get(k).getVmName(),dr);	
-							alarmDetailsArray.get(k).setDiskReadEmailSent("true");
-		    			}
-		    			if((alarmDetailsArray.get(k).getDisk_write() != -1 && alarmDetailsArray.get(k).getDiskWriteEmailSent() != "true") &&
-		    					(valueMap.get("diskwrite") >= alarmDetailsArray.get(k).getDisk_write()))
-		    			{
-		    				String dw = "diskWriteEmailSent";
-		    				String subject = "ATTENTION! Disk_Write Threshhold reached for"+alarmDetailsArray.get(k).getVmName();
-							String body = "Please check your VM's.";
-							SendEmail.sendMail(alarmDetailsArray.get(k).getEmailId(),subject,body);
-							updateEmailSent(alarmDetailsArray.get(k).getVmName(),dw);	
-							alarmDetailsArray.get(k).setDiskWriteEmailSent("true");
-		    			}
-		    			if((alarmDetailsArray.get(k).getCpu() != -1 && alarmDetailsArray.get(k).getCpuEmailSent() != "true") &&
-		    					(valueMap.get("cpu") >= alarmDetailsArray.get(k).getCpu()))
-		    			{
-		    				String c = "cpuEmailSent";
-		    				String subject = "ATTENTION! CPU Threshhold reached for"+alarmDetailsArray.get(k).getVmName();
-							String body = "Please check your VM's.";
-							SendEmail.sendMail(alarmDetailsArray.get(k).getEmailId(),subject,body);
-							updateEmailSent(alarmDetailsArray.get(k).getVmName(),c);
-							alarmDetailsArray.get(k).setCpuEmailSent("true");
-		    			}
-		    			if((alarmDetailsArray.get(k).getMemory() != -1 && alarmDetailsArray.get(k).getMemoryEmailSent() != "true") && 
-		    					(valueMap.get("mem") >= alarmDetailsArray.get(k).getMemory()))
-		    			{
-		    				String m = "memoryEmailSent";
-		    				String subject = "ATTENTION! Memory Threshhold reached for"+alarmDetailsArray.get(k).getVmName();
-							String body = "Please check your VM's.";
-							SendEmail.sendMail(alarmDetailsArray.get(k).getEmailId(),subject,body);
-							updateEmailSent(alarmDetailsArray.get(k).getVmName(),m);
-							alarmDetailsArray.get(k).setMemoryEmailSent("true");
-		    			}
-		    			if((alarmDetailsArray.get(k).getNetwork() != -1 && alarmDetailsArray.get(k).getNetworkEmailSent() != "true") && 
-		    					(valueMap.get("net") >= alarmDetailsArray.get(k).getNetwork()))
-		    			{
-		    				String n = "networkEmailSent";
-		    				String subject = "ATTENTION! Network Threshhold reached for"+alarmDetailsArray.get(k).getVmName();
-							String body = "Please check your VM's.";
-							SendEmail.sendMail(alarmDetailsArray.get(k).getEmailId(),subject,body);
-							updateEmailSent(alarmDetailsArray.get(k).getVmName(),n);
-							alarmDetailsArray.get(k).setNetworkEmailSent("true");
-		    			}
-		    		}
-	    		
+	    			Entry thisentry = (Entry) iterator.next();
+	    			valueMap = (Map<String, Long>) thisentry.getValue();
+	    			if((alarmDetailsArray.get(k).getDisk_read() != -1 && !alarmDetailsArray.get(k).getDiskReadEmailSent().contentEquals("true")) &&
+	    					(valueMap.get("diskread") >= alarmDetailsArray.get(k).getDisk_read()))
+	    			{
+	    				String dr = "diskReadEmailSent";
+	    				String subject = "ATTENTION! Disk_Read Threshhold reached for"+alarmDetailsArray.get(k).getVmName();
+						String body = "Please check your VM's.";
+						updateEmailSent(alarmDetailsArray.get(k).getVmName(),dr);	
+						alarmDetailsArray.get(k).setDiskReadEmailSent("true");
+						SendEmail.sendMail(alarmDetailsArray.get(k).getEmailId(),subject,body);
+	    			}
+	    			
+	    			if(((alarmDetailsArray.get(k).getDisk_write() != -1) && (!alarmDetailsArray.get(k).getDiskWriteEmailSent().contentEquals("true")) && (valueMap.get("diskwrite") >= alarmDetailsArray.get(k).getDisk_write())))
+	    			{
+	    				String dw = "diskWriteEmailSent";
+	    				String subject = "ATTENTION! Disk_Write Threshhold reached for"+alarmDetailsArray.get(k).getVmName();
+						String body = "Please check your VM's.";
+						
+						updateEmailSent(alarmDetailsArray.get(k).getVmName(),dw);	
+						alarmDetailsArray.get(k).setDiskWriteEmailSent("true");
+						SendEmail.sendMail(alarmDetailsArray.get(k).getEmailId(),subject,body);
+	    			}
+	    			
+	    			if((alarmDetailsArray.get(k).getCpu() != -1) && (!alarmDetailsArray.get(k).getCpuEmailSent().contentEquals("true")) &&
+	    					(valueMap.get("cpu") >= alarmDetailsArray.get(k).getCpu()))
+	    			{
+	    				String c = "cpuEmailSent";
+	    				String subject = "ATTENTION! CPU Threshhold reached for"+alarmDetailsArray.get(k).getVmName();
+						String body = "Please check your VM's.";
+						
+						updateEmailSent(alarmDetailsArray.get(k).getVmName(),c);
+						alarmDetailsArray.get(k).setCpuEmailSent("true");
+						SendEmail.sendMail(alarmDetailsArray.get(k).getEmailId(),subject,body);
+	    			}
+	    			if((alarmDetailsArray.get(k).getMemory() != -1) && (!alarmDetailsArray.get(k).getMemoryEmailSent().contentEquals("true")) && 
+	    					(valueMap.get("mem") >= alarmDetailsArray.get(k).getMemory()))
+	    			{
+	    				String m = "memoryEmailSent";
+	    				String subject = "ATTENTION! Memory Threshhold reached for"+alarmDetailsArray.get(k).getVmName();
+						String body = "Please check your VM's.";
+						
+						updateEmailSent(alarmDetailsArray.get(k).getVmName(),m);
+						alarmDetailsArray.get(k).setMemoryEmailSent("true");
+						SendEmail.sendMail(alarmDetailsArray.get(k).getEmailId(),subject,body);
+	    			}
+	    			if((alarmDetailsArray.get(k).getNetwork() != -1) && (!alarmDetailsArray.get(k).getNetworkEmailSent().contentEquals("true")) && 
+	    					(valueMap.get("net") >= alarmDetailsArray.get(k).getNetwork()))
+	    			{
+	    				String n = "networkEmailSent";
+	    				String subject = "ATTENTION! Network Threshhold reached for"+alarmDetailsArray.get(k).getVmName();
+						String body = "Please check your VM's.";
+						
+						updateEmailSent(alarmDetailsArray.get(k).getVmName(),n);
+						alarmDetailsArray.get(k).setNetworkEmailSent("true");
+						SendEmail.sendMail(alarmDetailsArray.get(k).getEmailId(),subject,body);
+	    			}
 	    		}
-	    		try{
-	                Thread.sleep(5000);
-	            } catch(Exception e){
-	                
-	            }
+    		
+    		}
+    		try{
+                Thread.sleep(5000);
+            } catch(Exception e){
+                
+        }
 	}
 }
 
