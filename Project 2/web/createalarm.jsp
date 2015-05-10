@@ -84,7 +84,11 @@
             if(document.getElementById('attr3').checked){
                 document.getElementById("thresholdNet").style.visibility="visible";
                 document.getElementById("showNet").style.display = "block";
-                ntwFlag=false;
+                if(document.getElementById('ntwThreshold').value == 0) {
+                    ntwFlag=false;
+                } else {
+                    ntwFlag=true;
+                }
                 validateForm();
             }
             else {
@@ -102,7 +106,11 @@
             if(document.getElementById('attr4').checked){
                 document.getElementById("thresholdDiskR").style.visibility="visible";
                 document.getElementById("showDiskR").style.display = "block";
-                diskReadFlag=false;
+                if(document.getElementById('diskReadThreshold').value == 0) {
+                    diskReadFlag=false;
+                } else {
+                    diskReadFlag=true;
+                }
                 validateForm();
             }
             else {
@@ -120,7 +128,11 @@
             if(document.getElementById('attr5').checked){
                 document.getElementById("thresholdDiskW").style.visibility="visible";
                 document.getElementById("showDiskW").style.display = "block";
-                diskWriteFlag=false;
+                if(document.getElementById('diskWriteThreshold').value == 0) {
+                    diskWriteFlag=false;
+                } else {
+                    diskWriteFlag=true;
+                }
                 validateForm();
             }
             else {
@@ -206,7 +218,7 @@
                 }
             }
             else {
-                diskReadFlag = false;
+                diskWriteFlag = false;
                 document.getElementById('createAlarmBtn').disabled = true;
             }
             validateForm();
@@ -235,6 +247,11 @@
                     "&netUsage=" + document.getElementById('ntwThreshold').value + "&period=" + document.getElementById('period').value;
         }
         function selectDeletion() {
+//            document.getElementById('attr1').checked = false;
+//            document.getElementById('attr2').checked = false;
+//            document.getElementById('attr3').checked = false;
+//            document.getElementById('attr4').checked = false;
+//            document.getElementById('attr5').checked = false;
             var radios = document.getElementsByName('radios');
             for(var i = 0; i < radios.length; i++){
                 if(radios[i].checked){
