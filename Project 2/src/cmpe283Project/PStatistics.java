@@ -1,4 +1,4 @@
-package cmpe283Project;
+package cmpe283;
 
 /**
  * Created by Varun on 4/11/2015.
